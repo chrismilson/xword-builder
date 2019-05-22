@@ -16,7 +16,7 @@ class XCell:
 
         if self and char != self.char:
             raise Exception(f'Word does not fit. Tried entering {char} on {self.char}')
-            
+
         if len(value) > 1:
             if dir.upper() in ['D', 'DN', 'DOWN']:
                 if self.down == None:
@@ -54,7 +54,7 @@ class XRow:
 
     def __setitem__(self, key, value):
         # The direction does not matter, as there is only one character.
-        self.cells[key].set('d', value[0])
+        self.cells[key].set('FORCE', value[0])
 
     def __str__(self):
         val = ''
@@ -78,3 +78,10 @@ class XWord:
         for row in self.rows:
             val += str(row) + '\n\n'
         return val
+
+class XClue:
+    def __init__(self, id: int, answer: str, dir: str, clue: str = ''):
+        self.id = id
+        self.dir = dir
+        self.answer = answer
+        self.clue = clue
