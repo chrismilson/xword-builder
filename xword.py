@@ -128,5 +128,8 @@ class XClue:
         self.answer = answer
         self.clue = clue
 
+    def setClue(self, clue):
+        self.clue = clue
+
     def __str__(self):
         return f'{self.id} {self.dir}: {self.clue} \n\t {self.answer}'
