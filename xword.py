@@ -116,7 +116,8 @@ class XWord:
                         words.append(XClue(number, down, 'down'))
                     if len(across) + len(down) > 2:
                         number += 1
-        return XCLues(words)
+        words.sort()
+        return words
 
 class XClue:
     def __init__(self, id: int, answer: str, dir: str, clue: str = ''):
@@ -137,4 +138,4 @@ class XClue:
     def __lt__(self, other):
         if self.dir != other.dir and self.dir == 'Across':
             return True
-        return self.id < other.id    
+        return self.id < other.id
