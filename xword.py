@@ -3,7 +3,8 @@ class XCell:
         self.char = char[0].upper()
         self.across = across
         self.down = down
-        self.count = 0
+        self.hasDown = False
+        self.hasAcross = False
 
     def __bool__(self):
         return self.char != ' '
@@ -13,23 +14,22 @@ class XCell:
 
         if dir.upper() in ['F', 'FORCE']:
             self.char = char
-
+            return
         if self and char != self.char:
             raise Exception(f'Word does not fit. Tried entering {char} on {self.char}')
-
-        if len(value) > 1:
+        elif len(value) > 1:
             if dir.upper() in ['D', 'DN', 'DOWN']:
                 if self.down == None:
                     raise Exception('Out of bounds')
                 self.down.set(dir, value[1:])
+                self.hasDown = True
             elif dir.upper() in ['A', 'ACROSS']:
                 if self.across == None:
                     raise Exception('Out of bounds')
                 self.across.set(dir, value[1:])
-            else:
-                return
+                self.hasAcross = True
         self.char = char
-        self.count += 1
+
 
     def __str__(self):
         if self:
@@ -78,6 +78,45 @@ class XWord:
         for row in self.rows:
             val += str(row) + '\n\n'
         return val
+
+    # Return a list of all the words in the crossword with empty clues.
+    def getWords(self):
+        acrossCheck = []
+        downCheck = []
+        for i in range(self.size):
+            acrossCheck.append([])
+            downCheck.append([])
+            for j in range(self.size):
+                acrossCheck[i].append(False)
+                downCheck[i].append(False)
+
+        words = []
+        number = 1
+        for row in range(self.size):
+            for col in range(self.size):
+                if self[row][col]:
+                    across = ''
+                    down = ''
+                    if not acrossCheck[row][col]:
+                        i = row
+                        while i < self.size and self[i][col]:
+                            across += str(self[i][col])
+                            acrossCheck[i][col] = True
+                            i += 1
+                    if not downCheck[row][col]:
+                        j = col
+                        while j < self.size and self[row][j]:
+                            down += str(self[row][j])
+                            downCheck[row][j] = True
+                            j += 1
+
+                    if len(across) > 1:
+                        words.append(XClue(number, across, 'across'))
+                    if len(down) > 1:
+                        words.append(XClue(number, down, 'down'))
+                    if len(across) + len(down) > 2:
+                        number += 1
+        return words
 
 class XClue:
     def __init__(self, id: int, answer: str, dir: str, clue: str = ''):
