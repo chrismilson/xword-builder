@@ -10,8 +10,13 @@ class XCell:
 
     def set(self, dir: str, value: str):
         char = value[0].upper()
+
+        if dir.upper() in ['F', 'FORCE']:
+            self.char = char
+
         if self and char != self.char:
             raise Exception(f'Word does not fit. Tried entering {char} on {self.char}')
+            
         if len(value) > 1:
             if dir.upper() in ['D', 'DN', 'DOWN']:
                 if self.down == None:
