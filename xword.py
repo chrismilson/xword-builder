@@ -97,17 +97,17 @@ class XWord:
                 if self[row][col]:
                     across = ''
                     down = ''
-                    if not acrossCheck[row][col]:
+                    if not downCheck[row][col]:
                         i = row
                         while i < self.size and self[i][col]:
-                            across += str(self[i][col])
-                            acrossCheck[i][col] = True
+                            down += str(self[i][col])
+                            downCheck[i][col] = True
                             i += 1
-                    if not downCheck[row][col]:
+                    if not acrossCheck[row][col]:
                         j = col
                         while j < self.size and self[row][j]:
-                            down += str(self[row][j])
-                            downCheck[row][j] = True
+                            across += str(self[row][j])
+                            acrossCheck[row][j] = True
                             j += 1
 
                     if len(across) > 1:
@@ -121,6 +121,12 @@ class XWord:
 class XClue:
     def __init__(self, id: int, answer: str, dir: str, clue: str = ''):
         self.id = id
-        self.dir = dir
+        if dir.upper() in ['D', 'DN', 'DOWN']:
+            self.dir = 'Down'
+        if dir.upper() in ['A', 'ACROSS']:
+            self.dir = 'Across'
         self.answer = answer
         self.clue = clue
+
+    def __str__(self):
+        return f'{self.id} {self.dir}: {self.clue} \n\t {self.answer}'
