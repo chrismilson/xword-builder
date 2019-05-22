@@ -90,7 +90,7 @@ class XWord:
                 acrossCheck[i].append(False)
                 downCheck[i].append(False)
 
-        words = {}
+        words = []
         number = 1
         for row in range(self.size):
             for col in range(self.size):
@@ -111,12 +111,12 @@ class XWord:
                             j += 1
 
                     if len(across) > 1:
-                        words[f'{number} Across'] = XClue(number, across, 'across')
+                        words.append(XClue(number, across, 'across'))
                     if len(down) > 1:
-                        words[f'{number} Down'] = XClue(number, down, 'down')
+                        words.append(XClue(number, down, 'down'))
                     if len(across) + len(down) > 2:
                         number += 1
-        return words
+        return XCLues(words)
 
 class XClue:
     def __init__(self, id: int, answer: str, dir: str, clue: str = ''):
@@ -134,11 +134,7 @@ class XClue:
     def __str__(self):
         return f'{self.id} {self.dir}: {self.clue} \n\t {self.answer}'
 
-    def __cmp__(self, other):
-        if self.dir != other.dir:
-            if self.dir == 'Down':
-                return -1
-            else:
-                return 1
-        else:
-            return cmp(self.id, other.id)
+    def __lt__(self, other):
+        if self.dir != other.dir and self.dir == 'Across':
+            return True
+        return self.id < other.id    
