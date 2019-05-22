@@ -2,13 +2,12 @@ from xword import XWord
 from tkinter import *
 
 class XBoard:
-
     def __init__(self, master, size: int):
         self.tileSize = 30
         self.tileSep = 3
 
         frame = Frame(master)
-        frame.pack()
+        frame.pack(side = 'left')
 
         self.size = size
         self.board = XWord(size)
@@ -46,11 +45,7 @@ class XBoard:
         row = event.y // self.tileSize
         col = event.x // self.tileSize
 
-        self.canvas.itemconfig(
-            f'at {row} {col}',
-            tags = ('cell', 'non-empty', f'at {row} {col}'),
-            fill = '#ffffff'
-        )
+        self.newWord(row, col)
 
     def resetCells(self, event):
         print('moo')
@@ -58,16 +53,31 @@ class XBoard:
         self.canvas.itemconfig('non-empty', fill = '#000000')
         self.canvas.dtag('non-empty', 'non-empty')
 
+    def newWord(self, row, col):
+        # open dialogue to get new word.
+
+        # try to add new word to XWord
+
+        # if good, redraw XBoard
+        pass
+
 class XLegend:
-    def __init__(self, board):
+    def __init__(self, master, board):
         self.board = board
+        self.clues = board.getWords()
+
+        frame = Frame(master)
+        frame.pack(side = 'right')
+
+        self.canvas = Canvas(frame, width = 700, height = 100)
+        self.canvas.pack()
 
 class XWordBuilder:
     def __init__(self, size: int = 1):
         self.root = Tk()
         self.board = XBoard(self.root, size)
 
-        self.legend = XLegend(self.board.board)
+        self.legend = XLegend(self.root, self.board.board)
 
     def start(self):
         self.root.mainloop()
