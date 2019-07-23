@@ -68,6 +68,8 @@ class XWord:
     def __init__(self, size: int = 0, filename: str = None):
         self.rows = []
         self.clues = []
+        self.across = []
+        self.down = []
         if filename != None:
             with open(filename) as f:
                 s = f.read()
@@ -136,7 +138,8 @@ class XWord:
                 acrossCheck[i].append(False)
                 downCheck[i].append(False)
 
-        words = []
+        acrossWords = []
+        downWords = []
         number = 1
         for row in range(self.size):
             for col in range(self.size):
@@ -157,13 +160,18 @@ class XWord:
                             j += 1
 
                     if len(across) > 1:
-                        words.append(XClue(number, across, 'across'))
+                        acrossWords.append(XClue(number, across, 'across'))
                     if len(down) > 1:
-                        words.append(XClue(number, down, 'down'))
-                    if len(across) + len(down) > 2:
+                        downWords.append(XClue(number, down, 'down'))
+                    if len(across) > 1 or len(down) > 1:
                         number += 1
-        words.sort()
+
+        acrossWords.sort()
+        downWords.sort()
+        words = acrossWords + downWords
         self.clues = words
+        self.across = acrossWords
+        self.down = downWords
         return words
 
 class XClue:
@@ -207,7 +215,7 @@ class XClue:
         return dummystring
 
     def __str__(self):
-        output = f'{self.id} {self.dir}: {self.clue}'
+        output = f'{self.id}\t{self.clue}'
         if not self.clue:
             output += self.answer
         if self.reveal:
